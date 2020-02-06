@@ -9,7 +9,15 @@ steps:
   inputs:
     packageType: 'sdk'
     useGlobalJson: true
-    
+
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'Clean-Architecture'
+    organization: 'piraces'
+    scannerMode: 'MSBuild'
+    projectKey: 'Clean-Architecture-tests'
+    projectName: 'Clean-Architecture'
+
 - script: dotnet restore
   displayName: 'dotnet restore'
 
@@ -22,3 +30,9 @@ steps:
     command: test
     projects: '**/*Tests/*.csproj'
     arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+
+- task: SonarCloudAnalyze@1
+
+- task: SonarCloudPublish@1
+  inputs:
+    pollingTimeoutSec: '300'
